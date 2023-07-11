@@ -56,8 +56,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted, reactive } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, reactive } from 'vue'
 
 import { useRouter, useRoute } from 'vue-router'
 import { type Options } from 'easymde'
@@ -70,139 +70,115 @@ import Editor from '../components/Editor.vue'
 import createMessage from '../components/createMessage'
 import { beforeUploadCheck } from '../helper'
 import type { ImageProps, ResponseType } from '@/types'
-export default defineComponent({
-  name: 'CreatePost',
-  components: {
-    ValidateInput,
-    ValidateForm,
-    Uploader,
-    Editor
-  },
-  setup() {
-    const uploadedData = ref()
-    const titleVal = ref('')
-    const editorStatus = reactive({
-      isValid: true,
-      message: ''
-    })
-    const router = useRouter()
-    const route = useRoute()
-    const isEditMode = !!route.query.id
-    const postId = route.query.id as string
 
-    const postStore = usePostStore()
-    const userStore = useUserStore()
-    const textArea = ref<null | HTMLTextAreaElement>(null)
-    let imageId = ''
-    const editorOptions: Options = {
-      spellChecker: false
-    }
-    const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
-    const contentVal = ref('')
-    const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
-    const checkEditor = () => {
-      if (contentVal.value.trim() === '') {
-        editorStatus.isValid = false
-        editorStatus.message = '文章详情不能为空'
-      } else {
-        editorStatus.isValid = true
-        editorStatus.message = ''
-      }
-    }
-    onMounted(() => {
-      if (isEditMode) {
-        postStore.fetchPost(postId).then((currentPost) => {
-          if (currentPost.image) {
-            uploadedData.value = { data: currentPost.image }
-          }
-          titleVal.value = currentPost.title
-          contentVal.value = currentPost.content || ''
-        })
-      }
-    })
-    const handleFileUploaded = (rawData: ResponseType<ImageProps>) => {
-      if (rawData.data._id) {
-        imageId = rawData.data._id
-      }
-    }
-    const onFormSubmit = async (result: boolean) => {
-      checkEditor()
-      if (result && editorStatus.isValid && userStore.data) {
-        const { column, _id } = userStore.data
-        if (column) {
-          const newPost: PostProps = {
-            title: titleVal.value,
-            content: contentVal.value,
-            column,
-            author: _id
-          }
-          if (imageId) {
-            newPost.image = imageId
-          }
-          // const actionName = isEditMode ? 'updatePost' : 'createPost'
-          // const sendData = isEditMode
-          //   ? {
-          //       id: route.query.id,
-          //       payload: newPost
-          //     }
-          //   : newPost
-          if (isEditMode) {
-            await postStore.updatePost(postId, newPost)
-            window.$message.success('更新成功，2秒后跳转到文章', {
-              duration: 2000
-            })
-          } else {
-            await postStore.createPost(newPost)
-            window.$message.success('发表成功，2秒后跳转到文章', {
-              duration: 2000
-            })
-          }
-          //createMessage("发表成功，2秒后跳转到文章", "success", 2000);
+const uploadedData = ref()
+const titleVal = ref('')
+const editorStatus = reactive({
+  isValid: true,
+  message: ''
+})
+const router = useRouter()
+const route = useRoute()
+const isEditMode = !!route.query.id
+const postId = route.query.id as string
 
-          setTimeout(() => {
-            router.push({ name: 'column', params: { id: column } })
-          }, 2000)
-          // store.dispatch(actionName, sendData).then(() => {
-          //   createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
-          //   setTimeout(() => {
-          //     router.push({ name: 'column', params: { id: column } })
-          //   }, 2000)
-          // })
-        }
+const postStore = usePostStore()
+const userStore = useUserStore()
+const textArea = ref<null | HTMLTextAreaElement>(null)
+let imageId = ''
+const editorOptions: Options = {
+  spellChecker: false
+}
+const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
+const contentVal = ref('')
+const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
+const checkEditor = () => {
+  if (contentVal.value.trim() === '') {
+    editorStatus.isValid = false
+    editorStatus.message = '文章详情不能为空'
+  } else {
+    editorStatus.isValid = true
+    editorStatus.message = ''
+  }
+}
+onMounted(() => {
+  if (isEditMode) {
+    postStore.fetchPost(postId).then((currentPost) => {
+      if (currentPost.image) {
+        uploadedData.value = { data: currentPost.image }
       }
-    }
-    const uploadCheck = (file: File) => {
-      const result = beforeUploadCheck(file, {
-        format: ['image/jpeg', 'image/png'],
-        size: 1
-      })
-      const { passed, error } = result
-      if (error === 'format') {
-        createMessage('上传图片只能是 JPG/PNG 格式!', 'error')
-      }
-      if (error === 'size') {
-        createMessage('上传图片大小不能超过 1Mb', 'error')
-      }
-      return passed
-    }
-    return {
-      titleRules,
-      titleVal,
-      contentVal,
-      contentRules,
-      onFormSubmit,
-      uploadCheck,
-      handleFileUploaded,
-      isEditMode,
-      uploadedData,
-      textArea,
-      editorOptions,
-      checkEditor,
-      editorStatus
-    }
+      titleVal.value = currentPost.title
+      contentVal.value = currentPost.content || ''
+    })
   }
 })
+const handleFileUploaded = (rawData: ResponseType<ImageProps>) => {
+  if (rawData.data._id) {
+    imageId = rawData.data._id
+  }
+}
+const onFormSubmit = async (result: boolean) => {
+  checkEditor()
+  if (result && editorStatus.isValid && userStore.data) {
+    const { column, _id } = userStore.data
+    if (column) {
+      const newPost: PostProps = {
+        title: titleVal.value,
+        content: contentVal.value,
+        column,
+        author: _id
+      }
+      if (imageId) {
+        newPost.image = imageId
+      }
+      // const actionName = isEditMode ? 'updatePost' : 'createPost'
+      // const sendData = isEditMode
+      //   ? {
+      //       id: route.query.id,
+      //       payload: newPost
+      //     }
+      //   : newPost
+      if (isEditMode) {
+        await postStore.updatePost(postId, newPost)
+        window.$message.success('更新成功，2秒后跳转到文章', {
+          duration: 2000
+        })
+      } else {
+        await postStore.createPost(newPost)
+        window.$message.success('发表成功，2秒后跳转到文章', {
+          duration: 2000
+        })
+      }
+      //createMessage("发表成功，2秒后跳转到文章", "success", 2000);
+
+      setTimeout(() => {
+        router.push({ name: 'column', params: { id: column } })
+      }, 2000)
+      // store.dispatch(actionName, sendData).then(() => {
+      //   createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
+      //   setTimeout(() => {
+      //     router.push({ name: 'column', params: { id: column } })
+      //   }, 2000)
+      // })
+    }
+  }
+}
+const uploadCheck = (file: File) => {
+  const result = beforeUploadCheck(file, {
+    format: ['image/jpeg', 'image/png'],
+    size: 1
+  })
+  const { passed, error } = result
+  if (error === 'format') {
+    createMessage('上传图片只能是 JPG/PNG 格式!', 'error')
+  }
+  if (error === 'size') {
+    createMessage('上传图片大小不能超过 1Mb', 'error')
+  }
+  return passed
+}
 </script>
+
 <style>
 .create-post-page .file-upload-container {
   height: 200px;

@@ -37,70 +37,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ValidateInput, { type RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 import { useUserStore } from '@/stores/user'
 
-//import { useMessage } from 'naive-ui'
-
-export default defineComponent({
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Login',
-  components: {
-    ValidateInput,
-    ValidateForm
-  },
-  setup() {
-    const emailVal = ref('vancee777@outlook.com')
-    const router = useRouter()
-    const userStore = useUserStore()
-    // const message = useMessage()
-    const emailRules: RulesProp = [
-      { type: 'required', message: '电子邮箱地址不能为空' },
-      { type: 'email', message: '请输入正确的电子邮箱格式' }
-    ]
-    const passwordVal = ref('leevancee@701')
-    const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
-    const onFormSubmit = async (result: boolean) => {
-      if (result) {
-        // const payload = {
-        //   email: emailVal.value,
-        //   password: passwordVal.value
-        // }
-        // store.dispatch('loginAndFetch', payload).then(data => {
-        //   createMessage('登录成功 2秒后跳转首页', 'success', 2000)
-        //   setTimeout(() => {
-        //     router.push('/')
-        //   }, 2000)
-        // }).catch(e => {
-        //   console.log(e)
-        // })
-        try {
-          await userStore.login(emailVal.value, passwordVal.value)
-          await userStore.fetchCurrentUser()
-          // createMessage('', 'success', 2000)
-          // message.success('登录成功 2秒后跳转首页', { duration: 2000 })
-          window.$message.success('登录成功 2秒后跳转首页', { duration: 2000 })
-          setTimeout(() => {
-            router.push('/')
-          }, 2000)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    }
-    return {
-      emailRules,
-      emailVal,
-      passwordVal,
-      passwordRules,
-      onFormSubmit
+const emailVal = ref('vancee777@outlook.com')
+const router = useRouter()
+const userStore = useUserStore()
+// const message = useMessage()
+const emailRules: RulesProp = [
+  { type: 'required', message: '电子邮箱地址不能为空' },
+  { type: 'email', message: '请输入正确的电子邮箱格式' }
+]
+const passwordVal = ref('leevancee@701')
+const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
+const onFormSubmit = async (result: boolean) => {
+  if (result) {
+    try {
+      await userStore.login(emailVal.value, passwordVal.value)
+      await userStore.fetchCurrentUser()
+      window.$message.success('登录成功 2秒后跳转首页', { duration: 2000 })
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+    } catch (error) {
+      console.log(error)
     }
   }
-})
+}
 </script>
 
 <style scoped>

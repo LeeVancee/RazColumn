@@ -4,17 +4,17 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted, onUnmounted, defineExpose, watch } from 'vue'
-import EasyMDE, { Options } from 'easymde'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import EasyMDE, { type Options } from 'easymde'
 // 类型，属性以及事件
 interface EditorProps {
-  modelValue?: string;
-  options?: Options;
+  modelValue?: string
+  options?: Options
 }
 interface EditorEvents {
-  (type: 'update:modelValue', value: string): void;
-  (type: 'change', value: string): void;
-  (type: 'blur'): void;
+  (type: 'update:modelValue', value: string): void
+  (type: 'change', value: string): void
+  (type: 'blur'): void
 }
 const props = defineProps<EditorProps>()
 const emit = defineEmits<EditorEvents>()
@@ -24,13 +24,16 @@ const emit = defineEmits<EditorEvents>()
 const textArea = ref<null | HTMLTextAreaElement>(null)
 let easyMDEInstance: EasyMDE | null = null
 const innerValue = ref(props.modelValue || '')
-watch(() => props.modelValue, (newValue) => {
-  if (easyMDEInstance) {
-    if (newValue !== innerValue.value) {
-      easyMDEInstance.value(newValue || '')
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (easyMDEInstance) {
+      if (newValue !== innerValue.value) {
+        easyMDEInstance.value(newValue || '')
+      }
     }
   }
-})
+)
 onMounted(() => {
   if (textArea.value) {
     // 组装 options

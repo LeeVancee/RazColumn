@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@types/marked':
+    specifier: ^5.0.0
+    version: registry.npmmirror.com/@types/marked@5.0.0
   axios:
     specifier: ^1.4.0
     version: registry.npmmirror.com/axios@1.4.0
@@ -564,6 +567,12 @@ packages:
     resolution: {integrity: sha512-vSSbKZFbNktrQ15v7o1EaH78EbWV+sPQbPjHG+Cp8CaNcPFUEfjZ0Iml/V0bFDwsTlYe8o6XC5Hfdp91cqPV2g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/marked/-/marked-4.3.1.tgz}
     name: '@types/marked'
     version: 4.3.1
+    dev: false
+
+  registry.npmmirror.com/@types/marked@5.0.0:
+    resolution: {integrity: sha512-YcZe50jhltsCq7rc9MNZC/4QB/OnA2Pd6hrOSTOFajtabN+38slqgDDCeE/0F83SjkKBQcsZUj7VLWR0H5cKRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/marked/-/marked-5.0.0.tgz}
+    name: '@types/marked'
+    version: 5.0.0
     dev: false
 
   registry.npmmirror.com/@types/node@18.16.17:

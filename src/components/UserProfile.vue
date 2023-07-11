@@ -10,27 +10,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import { UserDataProps } from '../store/user'
+<script setup lang="ts">
+import { computed, type PropType } from 'vue'
 import { addColumnAvatar } from '../helper'
-export default defineComponent({
-  props: {
-    user: {
-      type: Object as PropType<UserDataProps>,
-      required: true
-    }
-  },
-  setup(props) {
-    const fitUrl = computed(() => {
-      addColumnAvatar(props.user, 50, 50)
-      const { avatar } = props.user
-      return avatar && avatar.fitUrl
-    })
-    return {
-      fitUrl
-    }
+import type { UserDataProps } from '@/stores/user'
+
+const props = defineProps({
+  user: {
+    type: Object as PropType<UserDataProps>,
+    required: true
   }
+})
+const fitUrl = computed(() => {
+  addColumnAvatar(props.user, 50, 50)
+  const { avatar } = props.user
+  return avatar && avatar.fitUrl
 })
 </script>
 
@@ -42,4 +36,3 @@ export default defineComponent({
   border-radius: 50px; */
 }
 </style>
-../stores/user ../stores/user

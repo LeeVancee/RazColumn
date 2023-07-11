@@ -46,80 +46,61 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, computed, ref } from 'vue'
+<script setup lang="ts">
+import { onMounted, computed, ref } from 'vue'
 import { marked } from 'marked'
 import { useRoute, useRouter } from 'vue-router'
-// import { GlobalDataProps, PostProps, ImageProps, UserProps, ResponseType } from '../store'
 import { usePostStore } from '@/stores/post'
 import { useUserStore, type UserDataProps } from '@/stores/user'
 import { type ImageProps } from '@/stores/utils'
 import UserProfile from '../components/UserProfile.vue'
 import Modal from '../components/Modal.vue'
 
-export default defineComponent({
-  name: 'post-detail',
-  components: {
-    UserProfile,
-    Modal
-  },
-  setup() {
-    const route = useRoute()
-    const router = useRouter()
-    const postStore = usePostStore()
-    const userStore = useUserStore()
-    const modalIsVisible = ref(false)
-    const currentId = route.params.id as string
-    onMounted(() => {
-      postStore.fetchPost(currentId)
-      // store.dispatch('fetchPost', currentId)
-    })
-    const currentPost = computed(() => postStore.getCurrentPost(currentId))
-    const currentHTML = computed(() => {
-      if (currentPost.value && currentPost.value.content) {
-        const { isHTML, content } = currentPost.value
-        return isHTML ? content : marked.parse(content)
-      } else {
-        return ''
-      }
-    })
-    const showEditArea = computed(() => {
-      if (currentPost.value && currentPost.value.author && userStore.isLogin) {
-        const postAuthor = currentPost.value.author as UserDataProps
-        return postAuthor._id === userStore.data?._id
-      } else {
-        return false
-      }
-    })
-    const currentImageUrl = computed(() => {
-      if (currentPost.value && currentPost.value.image) {
-        const { image } = currentPost.value
-        return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
-      } else {
-        return null
-      }
-    })
-    const hideAndDelete = () => {
-      modalIsVisible.value = false
-      postStore.deletePost(currentId).then((data) => {
-        //  createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
-        window.$message.success('删除成功，2秒后跳转到专栏首页', {
-          duration: 2000
-        })
-        setTimeout(() => {
-          router.push({ name: 'column', params: { id: data.column } })
-        }, 2000)
-      })
-    }
-    return {
-      currentPost,
-      currentImageUrl,
-      currentHTML,
-      showEditArea,
-      modalIsVisible,
-      hideAndDelete
-    }
+const route = useRoute()
+const router = useRouter()
+const postStore = usePostStore()
+const userStore = useUserStore()
+const modalIsVisible = ref(false)
+const currentId = route.params.id as string
+onMounted(() => {
+  postStore.fetchPost(currentId)
+  // store.dispatch('fetchPost', currentId)
+})
+const currentPost = computed(() => postStore.getCurrentPost(currentId))
+const currentHTML = computed(() => {
+  if (currentPost.value && currentPost.value.content) {
+    const { isHTML, content } = currentPost.value
+    return isHTML ? content : marked.parse(content)
+  } else {
+    return ''
   }
 })
+const showEditArea = computed(() => {
+  if (currentPost.value && currentPost.value.author && userStore.isLogin) {
+    const postAuthor = currentPost.value.author as UserDataProps
+    return postAuthor._id === userStore.data?._id
+  } else {
+    return false
+  }
+})
+const currentImageUrl = computed(() => {
+  if (currentPost.value && currentPost.value.image) {
+    const { image } = currentPost.value
+    return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
+  } else {
+    return null
+  }
+})
+const hideAndDelete = () => {
+  modalIsVisible.value = false
+  postStore.deletePost(currentId).then((data) => {
+    //  createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
+    window.$message.success('删除成功，2秒后跳转到专栏首页', {
+      duration: 2000
+    })
+    setTimeout(() => {
+      router.push({ name: 'column', params: { id: data.column } })
+    }, 2000)
+  })
+}
 </script>
-../stores/post../stores/user../stores/utils ../stores/post ../stores/user ../stores/utils

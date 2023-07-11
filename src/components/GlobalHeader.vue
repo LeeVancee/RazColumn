@@ -3,32 +3,24 @@
     <router-link class="navbar-brand" to="/">雷泽</router-link>
     <ul v-if="!isLogin" class="list-inline mb-0">
       <li class="list-inline-item">
-        <router-link to="/login" class="btn btn-outline-light my-2"
-          >登陆</router-link
-        >
+        <router-link to="/login" class="btn btn-outline-light my-2">登陆</router-link>
       </li>
       <li class="list-inline-item">
-        <router-link to="/signup" class="btn btn-outline-light my-2"
-          >注册</router-link
-        >
+        <router-link to="/signup" class="btn btn-outline-light my-2">注册</router-link>
       </li>
     </ul>
     <ul v-else-if="isLogin && data" class="list-inline mb-0">
       <li class="list-inline-item">
         <dropdown :title="`你好 ${data.nickName}`">
           <dropdown-item
-            ><router-link to="/create" class="dropdown-item"
-              >新建文章</router-link
-            ></dropdown-item
+            ><router-link to="/create" class="dropdown-item">新建文章</router-link></dropdown-item
           >
           <dropdown-item
             ><router-link :to="`/column/${data.column}`" class="dropdown-item"
               >我的专栏</router-link
             ></dropdown-item
           >
-          <dropdown-item disabled
-            ><a href="#" class="dropdown-item">编辑资料</a></dropdown-item
-          >
+          <dropdown-item disabled><a href="#" class="dropdown-item">编辑资料</a></dropdown-item>
           <dropdown-item
             ><a href="#" class="dropdown-item" @click.prevent="handleLogout"
               >退出登陆</a
@@ -44,7 +36,7 @@
 import { defineComponent, type PropType } from 'vue'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
-import { type UserDataProps, useUserStore } from '../store/user'
+import { type UserDataProps, useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({

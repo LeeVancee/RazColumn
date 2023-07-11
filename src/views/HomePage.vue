@@ -23,40 +23,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue'
-
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import { useColumnStore } from '@/stores/column'
 import useLoadMore from '../hooks/useLoadMore2'
 import ColumnList from '../components/ColumnList.vue'
 
-export default defineComponent({
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Home',
-  components: {
-    ColumnList
-  },
-  setup() {
-    const columnStore = useColumnStore()
-    const total = computed(() => columnStore.total)
-    const currentPage = computed(() => columnStore.currentPage)
-    // const selectedColumn = computed(() => testStore.getDataById('2345'))
-    onMounted(() => {
-      columnStore.fetchColumns({ pageSize: 3 })
-      // store.dispatch('fetchColumns', { pageSize: 3 })
-    })
-    const list = computed(() => columnStore.getColumns)
-    const { loadMorePage, isLastPage } = useLoadMore(columnStore, 'fetchColumns', {
-      total,
-      currentPage,
-      pageSize: 3
-    })
-    return {
-      list,
-      loadMorePage,
-      isLastPage
-    }
-  }
+const columnStore = useColumnStore()
+const total = computed(() => columnStore.total)
+const currentPage = computed(() => columnStore.currentPage)
+// const selectedColumn = computed(() => testStore.getDataById('2345'))
+onMounted(() => {
+  columnStore.fetchColumns({ pageSize: 3 })
+  // store.dispatch('fetchColumns', { pageSize: 3 })
+})
+const list = computed(() => columnStore.getColumns)
+const { loadMorePage, isLastPage } = useLoadMore(columnStore, 'fetchColumns', {
+  total,
+  currentPage,
+  pageSize: 3
 })
 </script>
-../stores/column ../stores/column

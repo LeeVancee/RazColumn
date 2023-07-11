@@ -31,47 +31,34 @@
     </ul>
   </nav>
 </template>
-
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+<script setup lang="ts">
+import { type PropType } from 'vue'
 import Dropdown from '@/components/Dropdown.vue'
 import DropdownItem from '@/components/DropdownItem.vue'
 import { type UserDataProps, useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'GlobalHeader',
-  components: {
-    Dropdown,
-    DropdownItem
+defineProps({
+  data: {
+    type: [Object, null] as PropType<UserDataProps | null>,
+    required: true
   },
-  props: {
-    data: {
-      type: [Object, null] as PropType<UserDataProps | null>,
-      required: true
-    },
-    isLogin: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const userStore = useUserStore()
-    const router = useRouter()
-    const handleLogout = () => {
-      userStore.logout()
-      // createMessage('退出登录成功，2秒后跳转到首页', 'success', 2000)
-      window.$message.success('退出登录成功，2秒后跳转到首页', {
-        duration: 2000
-      })
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
-    }
-    return {
-      handleLogout
-    }
+  isLogin: {
+    type: Boolean,
+    required: true
   }
 })
+
+const userStore = useUserStore()
+const router = useRouter()
+const handleLogout = () => {
+  userStore.logout()
+  // createMessage('退出登录成功，2秒后跳转到首页', 'success', 2000)
+  window.$message.success('退出登录成功，2秒后跳转到首页', {
+    duration: 2000
+  })
+  setTimeout(() => {
+    router.push('/')
+  }, 2000)
+}
 </script>
-@/stores/user @/stores/user
