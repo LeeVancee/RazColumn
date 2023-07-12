@@ -1,37 +1,35 @@
 <template>
-  <div class="login-container">
-    <div class="login-page login-wrapper">
-      <h5 class="header">登录到下北泽</h5>
-      <div class="form">
-        <validate-form @form-submit="onFormSubmit">
-          <validate-input
-            :rules="emailRules"
-            v-model="emailVal"
-            placeholder="请输入邮箱地址"
-            type="text"
-            ref="inputRef"
-          />
-          <validate-input
-            type="password"
-            placeholder="请输入密码"
-            :rules="passwordRules"
-            v-model="passwordVal"
-          />
+  <div class="login-page login-wrapper">
+    <h5 class="header">登录到RazColumn</h5>
+    <div class="form">
+      <validate-form @form-submit="onFormSubmit">
+        <validate-input
+          :rules="emailRules"
+          v-model="emailVal"
+          placeholder="请输入邮箱地址"
+          type="text"
+          ref="inputRef"
+        />
+        <validate-input
+          type="password"
+          placeholder="请输入密码"
+          :rules="passwordRules"
+          v-model="passwordVal"
+        />
 
-          <template #submit>
-            <button type="submit" class="btn btn-primary btn-block btn-large">登录</button>
-          </template>
-        </validate-form>
+        <template #submit>
+          <button type="submit" class="btn btn-primary btn-block btn-large">登录</button>
+        </template>
+      </validate-form>
+    </div>
+    <div class="message">
+      <div class="msg">
+        Don't have account?
+        <a href="javascript:void(0)" @click="toSignUp">Sign up</a>
       </div>
-      <div class="message">
-        <div class="msg">
-          Don't have account?
-          <router-link to="/signup">Sign up</router-link>
-        </div>
-        <div class="msg">
-          back to
-          <router-link to="/">首页</router-link>
-        </div>
+      <div class="msg">
+        back to
+        <a to="/">首页</a>
       </div>
     </div>
   </div>
@@ -43,10 +41,12 @@ import { useRouter } from 'vue-router'
 import ValidateInput, { type RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 import { useUserStore } from '@/stores/user'
+import { usePwdStore } from '@/stores/pwd'
 
 const emailVal = ref('vancee777@outlook.com')
 const router = useRouter()
 const userStore = useUserStore()
+const pwdStore = usePwdStore()
 // const message = useMessage()
 const emailRules: RulesProp = [
   { type: 'required', message: '电子邮箱地址不能为空' },
@@ -59,7 +59,7 @@ const onFormSubmit = async (result: boolean) => {
     try {
       await userStore.login(emailVal.value, passwordVal.value)
       await userStore.fetchCurrentUser()
-      window.$message.success('登录成功 2秒后跳转首页', { duration: 2000 })
+      window.$message.success('登录成功！', { duration: 2000 })
       setTimeout(() => {
         router.push('/')
       }, 2000)
@@ -67,6 +67,10 @@ const onFormSubmit = async (result: boolean) => {
       console.log(error)
     }
   }
+}
+
+const toSignUp = () => {
+  pwdStore.change(2)
 }
 </script>
 
@@ -84,10 +88,9 @@ const onFormSubmit = async (result: boolean) => {
   height: 588px;
   border-radius: 15px;
   padding: 0 50px;
-  position: relative;
+  /* position: relative;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 50%; */
 }
 .header {
   font-size: 38px;
@@ -130,4 +133,3 @@ a {
   color: #abc1ee;
 }
 </style>
-../stores/user ../stores/user

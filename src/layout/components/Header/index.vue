@@ -31,47 +31,50 @@
     </ul>
   </nav> -->
   <n-layout-header class="mb-4">
-    <div class="navbar">
+    <div class="left navbar">
       <img class="img" src="@/assets/Razlogo.webp" alt="" srcset="" />
       <router-link class="navbar-brand" to="/">RazColumn</router-link>
     </div>
-
-    <ul v-if="!isLogin" class="list-inline mb-0">
-      <li class="list-inline-item">
-        <router-link to="/login" class="my-2">登陆</router-link>
-      </li>
-      <li class="list-inline-item">
-        <router-link to="/signup" class="my-2">注册</router-link>
-      </li>
-    </ul>
-    <ul v-else-if="isLogin && data" class="list-inline mb-0">
-      <li class="list-inline-item">
-        <dropdown :title="`你好 ${data.nickName}`">
-          <dropdown-item
-            ><router-link to="/create" class="dropdown-item">新建文章</router-link></dropdown-item
-          >
-          <dropdown-item
-            ><router-link :to="`/column/${data.column}`" class="dropdown-item"
-              >我的专栏</router-link
-            ></dropdown-item
-          >
-          <dropdown-item disabled><a href="#" class="dropdown-item">编辑资料</a></dropdown-item>
-          <dropdown-item
-            ><a href="#" class="dropdown-item" @click.prevent="handleLogout"
-              >退出登陆</a
-            ></dropdown-item
-          >
-        </dropdown>
-      </li>
-    </ul>
+    <div class="right navbar">
+      <ul v-if="!isLogin" class="list-inline mb-0">
+        <li class="list-inline-item">
+          <n-button @click="showModal">登录</n-button>
+          <Modal v-model:show="modal" />
+        </li>
+      </ul>
+      <ul v-else-if="isLogin && data" class="list-inline mb-0">
+        <li class="list-inline-item">
+          <dropdown :title="`你好 ${data.nickName}`">
+            <dropdown-item
+              ><router-link to="/create" class="dropdown-item">新建文章</router-link></dropdown-item
+            >
+            <dropdown-item
+              ><router-link :to="`/column/${data.column}`" class="dropdown-item"
+                >我的专栏</router-link
+              ></dropdown-item
+            >
+            <dropdown-item disabled><a href="#" class="dropdown-item">编辑资料</a></dropdown-item>
+            <dropdown-item
+              ><a href="#" class="dropdown-item" @click.prevent="handleLogout"
+                >退出登录</a
+              ></dropdown-item
+            >
+          </dropdown>
+        </li>
+      </ul>
+    </div>
   </n-layout-header>
 </template>
 <script setup lang="ts">
-import { type PropType } from 'vue'
+import { ref, type PropType } from 'vue'
 import Dropdown from '@/components/Dropdown.vue'
 import DropdownItem from '@/components/DropdownItem.vue'
 import { type UserDataProps, useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { usePwdStore } from '@/stores/pwd'
+import Modal from '@/components/LoginAndSign.vue'
+
+const pwdStore = usePwdStore()
 
 defineProps({
   data: {
@@ -85,16 +88,23 @@ defineProps({
 })
 
 const userStore = useUserStore()
-const router = useRouter()
+// const router = useRouter()
 const handleLogout = () => {
   userStore.logout()
   // createMessage('退出登录成功，2秒后跳转到首页', 'success', 2000)
-  window.$message.success('退出登录成功，2秒后跳转到首页', {
+  window.$message.success('退出登录成功', {
     duration: 2000
   })
-  setTimeout(() => {
+  /* setTimeout(() => {
     router.push('/')
-  }, 2000)
+  }, 2000) */
+  modal.value = false
+}
+
+const modal = ref(false)
+const showModal = () => {
+  modal.value = true
+  pwdStore.validate = 1
 }
 </script>
 

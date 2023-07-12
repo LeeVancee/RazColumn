@@ -15,7 +15,7 @@
     </div>
     <post-list :list="list"></post-list>
     <n-button class="mt-2 mb-5 mx-auto w-25 d-block" @click="loadMorePage" v-if="!isLastPage">
-      <a class="mx-auto"> 加载更多</a>
+      <a class="mx-auto"> </a>
     </n-button>
   </div>
 </template>

@@ -11,9 +11,7 @@
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-left">{{ column.description }}</p>
 
-          <n-button @click="toColumn">
-            <router-link :to="`/column/${column._id}`">进入专栏</router-link>
-          </n-button>
+          <n-button @click="toColumn(column._id)"> 进入专栏 </n-button>
         </div>
       </div>
     </div>
@@ -37,12 +35,13 @@ const props = defineProps({
 const columnList = computed(() => {
   return props.list.map((column) => {
     addColumnAvatar(column, 50, 50)
+
     return column
   })
 })
 
-const toColumn = () => {
-  //  router.push(`/column/${column._id}`)
+const toColumn = (columnId: any) => {
+  router.push(`/column/${columnId}`)
 }
 </script>
 <style scoped>
