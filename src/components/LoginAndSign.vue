@@ -14,11 +14,6 @@ import { usePwdStore } from '@/stores/pwd'
 
 const pwdStore = usePwdStore()
 
-const show = () => {
-  showModal.value = true
-  pwdStore.validate = 1
-}
-
 const showModal = ref(false)
 </script>
 

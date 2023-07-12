@@ -5,7 +5,7 @@
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
           <h2 class="font-weight-light">随心写作，自由表达</h2>
-          <n-button type="info"> 开始写文章 </n-button>
+          <n-button type="info" @click="toCreate"> 开始写文章 </n-button>
         </div>
       </div>
     </section>
@@ -23,7 +23,9 @@ import { computed, onMounted } from 'vue'
 import { useColumnStore } from '@/stores/column'
 import useLoadMore from '../hooks/useLoadMore2'
 import ColumnList from '../components/ColumnList.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const columnStore = useColumnStore()
 const total = computed(() => columnStore.total)
 const currentPage = computed(() => columnStore.currentPage)
@@ -38,4 +40,7 @@ const { loadMorePage, isLastPage } = useLoadMore(columnStore, 'fetchColumns', {
   currentPage,
   pageSize: 3
 })
+const toCreate = () => {
+  router.push('/create')
+}
 </script>
