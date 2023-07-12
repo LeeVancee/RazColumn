@@ -10,9 +10,10 @@
           />
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-left">{{ column.description }}</p>
-          <router-link :to="`/column/${column._id}`" class="btn btn-outline-primary"
-            >进入专栏</router-link
-          >
+
+          <n-button @click="toColumn">
+            <router-link :to="`/column/${column._id}`">进入专栏</router-link>
+          </n-button>
         </div>
       </div>
     </div>
@@ -23,7 +24,9 @@
 import { type PropType, computed } from 'vue'
 import { addColumnAvatar } from '../helper'
 import type { ColumnProps } from '@/stores/column'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const props = defineProps({
   list: {
     type: Array as PropType<ColumnProps[]>,
@@ -37,6 +40,10 @@ const columnList = computed(() => {
     return column
   })
 })
+
+const toColumn = () => {
+  //  router.push(`/column/${column._id}`)
+}
 </script>
 <style scoped>
 .card-body img {

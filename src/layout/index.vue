@@ -3,7 +3,7 @@
     <Header :data="currentUser" :is-login="isLogin"></Header>
     <loader v-if="isLoading"></loader>
     <Main />
-    <div style="height: 100%"></div>
+    <div class="box"></div>
     <Footer />
   </div>
 </template>
@@ -43,7 +43,11 @@ watch(
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  align-content: space-between;
+}
+.box {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
-@/stores/global@/stores/user @/stores/global @/stores/user

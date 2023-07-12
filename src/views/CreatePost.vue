@@ -48,9 +48,9 @@
         }}</span>
       </div>
       <template #submit>
-        <button class="btn btn-primary btn-large">
+        <n-button type="info">
           {{ isEditMode ? '更新文章' : '发表文章' }}
-        </button>
+        </n-button>
       </template>
     </validate-form>
   </div>
@@ -67,7 +67,6 @@ import ValidateInput, { type RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 import Uploader from '../components/Uploader.vue'
 import Editor from '../components/Editor.vue'
-import createMessage from '../components/createMessage'
 import { beforeUploadCheck } from '../helper'
 import type { ImageProps, ResponseType } from '@/types'
 
@@ -149,17 +148,10 @@ const onFormSubmit = async (result: boolean) => {
           duration: 2000
         })
       }
-      //createMessage("发表成功，2秒后跳转到文章", "success", 2000);
 
       setTimeout(() => {
         router.push({ name: 'column', params: { id: column } })
       }, 2000)
-      // store.dispatch(actionName, sendData).then(() => {
-      //   createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
-      //   setTimeout(() => {
-      //     router.push({ name: 'column', params: { id: column } })
-      //   }, 2000)
-      // })
     }
   }
 }
@@ -170,10 +162,17 @@ const uploadCheck = (file: File) => {
   })
   const { passed, error } = result
   if (error === 'format') {
-    createMessage('上传图片只能是 JPG/PNG 格式!', 'error')
+    // createMessage('上传图片只能是 JPG/PNG 格式!', 'error')
+    window.$message.warning('发表成功，2秒后跳转到文章', {
+      duration: 2000
+    })
   }
+
   if (error === 'size') {
-    createMessage('上传图片大小不能超过 1Mb', 'error')
+    // createMessage('上传图片大小不能超过 1Mb', 'error')
+    window.$message.warning('上传图片大小不能超过 1Mb', {
+      duration: 2000
+    })
   }
   return passed
 }

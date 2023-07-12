@@ -1,45 +1,44 @@
 <template>
-  <teleport to="#modal">
-    <div class="modal d-block" tabindex="-1" v-if="visible">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" @click="onClose">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <slot></slot>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="onClose">
-              取消
-            </button>
-            <button type="button" class="btn btn-primary" @click="onConfirm">确定</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </teleport>
+  <!-- <n-button @click="showModal = true"> 来吧 </n-button> -->
+  <n-modal
+    v-model:show="showModal"
+    :mask-closable="false"
+    preset="dialog"
+    :title="title"
+    :content="content"
+    positive-text="确认"
+    negative-text="取消"
+    @positive-click="onPositiveClick"
+    @negative-click="onNegativeClick"
+  />
 </template>
 
 <script setup lang="ts">
-import useDOMCreate from '../hooks/useDOMCreate'
-
-const emit = defineEmits(['modal-on-close', 'modal-on-confirm'])
+import { ref } from 'vue'
 const props = defineProps({
   title: String,
   visible: {
     type: Boolean,
     default: false
-  }
+  },
+  content: String
 })
-const onClose = () => {
-  emit('modal-on-close')
+
+const showModalRef = ref(false)
+
+const showModal = showModalRef
+
+if (props.visible === true) {
+  showModalRef.value = true
 }
-const onConfirm = () => {
+console.log(showModal)
+const onNegativeClick = () => {
+  showModalRef.value = false
+}
+const onPositiveClick = () => {
   emit('modal-on-confirm')
+  showModalRef.value = false
 }
-useDOMCreate('modal')
+
+const emit = defineEmits(['modal-on-confirm'])
 </script>

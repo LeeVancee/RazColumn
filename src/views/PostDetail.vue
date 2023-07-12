@@ -1,13 +1,11 @@
 <template>
   <div class="post-detail-page">
-    <modal
-      title="删除文章"
-      :visible="modalIsVisible"
-      @modal-on-close="modalIsVisible = false"
+    <Modal
+      v-model:show="modalIsVisible"
+      :content="content"
+      :title="title"
       @modal-on-confirm="hideAndDelete"
-    >
-      <p>确定要删除这篇文章吗？</p>
-    </modal>
+    />
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
       <img
         :src="currentImageUrl"
@@ -30,17 +28,9 @@
         >
       </div>
       <div v-html="currentHTML"></div>
-      <div v-if="showEditArea" class="btn-group mt-5">
-        <router-link
-          type="button"
-          class="btn btn-success"
-          :to="{ name: 'create', query: { id: currentPost._id } }"
-        >
-          编辑
-        </router-link>
-        <button type="button" class="btn btn-danger" @click.prevent="modalIsVisible = true">
-          删除
-        </button>
+      <div v-if="showEditArea" class="btn-group mt-2">
+        <n-button type="primary" @click="edit"> 编辑</n-button>
+        <n-button type="error" @click="deletePost" class="button"> 删除 </n-button>
       </div>
     </article>
   </div>
@@ -54,13 +44,16 @@ import { usePostStore } from '@/stores/post'
 import { useUserStore, type UserDataProps } from '@/stores/user'
 import { type ImageProps } from '@/stores/utils'
 import UserProfile from '../components/UserProfile.vue'
-import Modal from '../components/Modal.vue'
+import Modal from '@/components/Modal.vue'
 
 const route = useRoute()
 const router = useRouter()
 const postStore = usePostStore()
 const userStore = useUserStore()
 const modalIsVisible = ref(false)
+const title = ref('删除文章')
+const content = ref('确认删除这篇文章吗')
+
 const currentId = route.params.id as string
 onMounted(() => {
   postStore.fetchPost(currentId)
@@ -91,6 +84,12 @@ const currentImageUrl = computed(() => {
     return null
   }
 })
+const edit = () => {
+  router.push({ name: 'create', query: { id: currentPost.value._id } })
+}
+const deletePost = () => {
+  modalIsVisible.value = true
+}
 const hideAndDelete = () => {
   modalIsVisible.value = false
   postStore.deletePost(currentId).then((data) => {
@@ -104,3 +103,8 @@ const hideAndDelete = () => {
   })
 }
 </script>
+<style>
+.button {
+  margin-left: 10px;
+}
+</style>
