@@ -6,7 +6,6 @@ import ColumnDetail from '@/views/ColumnDetail.vue'
 import CreatePost from '@/views/CreatePost.vue'
 import PostDetail from '@/views/PostDetail.vue'
 import HomePage from '@/views/HomePage.vue'
-import Modal from '@/components/ModalLogin.vue'
 import { useUserStore } from '@/stores/user'
 import request from '@/utils/request'
 
@@ -17,10 +16,10 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home,
-      redirect: '/homepage',
+
       children: [
         {
-          path: '/homepage',
+          path: '/',
           name: 'homepage',
           component: HomePage
         },
@@ -55,11 +54,6 @@ const router = createRouter({
       component: Signup,
       meta: { redirectAlreadyLogin: true }
     }
-    /* {
-      path: '/modal',
-      name: 'modal',
-      component: Modal
-    } */
   ]
 })
 router.beforeEach((to, from, next) => {
